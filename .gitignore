@@ -1,0 +1,8 @@
+*.iml
+*.iws
+*.ipr
+*.class
+.idea
+out/
+.DS_Store
+src/SelfTest.java
