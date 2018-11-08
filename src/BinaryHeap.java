@@ -18,28 +18,6 @@ public class BinaryHeap implements PriorityQueue {
 
     private int maxSize;
 
-    public void printInternal() {
-        System.out.println("length: " + this.getCurrentSize());
-        StringBuffer stringBuffer = new StringBuffer("[");
-        for (int i = 0; i < this.getData().length; i++) {
-            if (DEFAULT_ARRAY_INIT_VALUE != this.data[i]) {
-                if (i + 1 != this.getData().length) {
-                    stringBuffer.append(this.data[i] + ", ");
-                } else {
-                    stringBuffer.append(i);
-                }
-            }
-        }
-        stringBuffer.append("]");
-//        System.out.println(Arrays.toString(this.getData()));
-        System.out.println(stringBuffer.toString());
-        System.out.println("**************************");
-    }
-
-    public void printInternalAll() {
-        System.out.println(Arrays.toString(this.getData()));
-    }
-
     public BinaryHeap(int size) {
         this.data = new int[size];
         initializeArray(this.data);
@@ -160,6 +138,28 @@ public class BinaryHeap implements PriorityQueue {
 
     private boolean isEmpty() {
         return DEFAULT_ARRAY_INIT_VALUE == this.getData()[1];
+    }
+
+
+    public void printInternal() {
+        System.out.println("length: " + this.getCurrentSize());
+        StringBuffer stringBuffer = new StringBuffer("[");
+        for (int i = 0; i < this.getData().length; i++) {
+            if (DEFAULT_ARRAY_INIT_VALUE != this.data[i]) {
+                if (i + 1 != this.getData().length) {
+                    stringBuffer.append(this.data[i] + ", ");
+                } else {
+                    stringBuffer.append(i);
+                }
+            }
+        }
+        stringBuffer.append("]");
+        System.out.println(stringBuffer.toString());
+        System.out.println("**************************");
+    }
+
+    public void printInternalAll() {
+        System.out.println(Arrays.toString(this.getData()));
     }
 
     public int[] getData() {
