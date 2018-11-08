@@ -8,6 +8,8 @@ import java.util.Arrays;
  */
 public class BinaryHeap implements PriorityQueue {
 
+    private static final int DEFAULT_ARRAY_INIT_VALUE = Integer.MIN_VALUE;
+
     private static final int DEFAULT_SIZE = 10;
 
     private int[] data;
@@ -20,7 +22,7 @@ public class BinaryHeap implements PriorityQueue {
         System.out.println("length: " + this.getCurrentSize());
         StringBuffer stringBuffer = new StringBuffer("[");
         for (int i = 0; i < this.getData().length; i++) {
-            if (-1 != this.data[i]) {
+            if (DEFAULT_ARRAY_INIT_VALUE != this.data[i]) {
                 if (i + 1 != this.getData().length) {
                     stringBuffer.append(this.data[i] + ", ");
                 } else {
@@ -31,6 +33,11 @@ public class BinaryHeap implements PriorityQueue {
         stringBuffer.append("]");
 //        System.out.println(Arrays.toString(this.getData()));
         System.out.println(stringBuffer.toString());
+        System.out.println("**************************");
+    }
+
+    public void printInternalAll() {
+        System.out.println(Arrays.toString(this.getData()));
     }
 
     public BinaryHeap(int size) {
@@ -75,7 +82,7 @@ public class BinaryHeap implements PriorityQueue {
             moveDown(currentIndex);
         }
         int returnVal = this.data[this.currentSize];
-        this.data[this.getCurrentSize()] = -1;
+        this.data[this.getCurrentSize()] = DEFAULT_ARRAY_INIT_VALUE;
         this.currentSize--;
         return returnVal;
     }
@@ -84,21 +91,26 @@ public class BinaryHeap implements PriorityQueue {
         int leftChildIndex = leftChildIndex(currentIndex);
         int rightChildIndex = rightChildIndex(currentIndex);
         if (leftChildIndex >= this.getCurrentSize() || rightChildIndex >= this.getCurrentSize()) {
+            if (leftChildIndex < this.getCurrentSize() && !isEmptyOnIndex(leftChildIndex) && this.data[leftChildIndex] < this.data[currentIndex]) {
+                swapValueWithIndex(leftChildIndex, currentIndex);
+            } else if (rightChildIndex < this.getCurrentSize() && !isEmptyOnIndex(rightChildIndex) && this.data[rightChildIndex] < this.data[currentIndex]) {
+                swapValueWithIndex(rightChildIndex, currentIndex);
+            }
             return;
         }
-        if (this.data[currentIndex] > this.data[leftChildIndex] && this.data[currentIndex] < this.data[rightChildIndex]) {
-            // bigger than left children
-            swapValueWithIndex(currentIndex, leftChildIndex);
-            moveDown(leftChildIndex);
-        } else if (this.data[currentIndex] < this.data[leftChildIndex] && this.data[currentIndex] > this.data[rightChildIndex]) {
-            // bigger than right children
-            swapValueWithIndex(currentIndex, rightChildIndex);
-            moveDown(rightChildIndex);
-        } else if (this.data[currentIndex] > this.data[leftChildIndex] && this.data[currentIndex] > this.data[rightChildIndex]) {
+        if (this.data[currentIndex] > this.data[leftChildIndex] && this.data[currentIndex] > this.data[rightChildIndex]) {
             // bigger than both of left and right children
             int resultIndex = minBetweenChildren(leftChildIndex, rightChildIndex);
             swapValueWithIndex(currentIndex, resultIndex);
             moveDown(resultIndex);
+        } else if (this.data[currentIndex] > this.data[leftChildIndex]) {// && this.data[currentIndex] < this.data[rightChildIndex]
+            // bigger than left children
+            swapValueWithIndex(currentIndex, leftChildIndex);
+            moveDown(leftChildIndex);
+        } else if (this.data[currentIndex] > this.data[rightChildIndex]) {//this.data[currentIndex] < this.data[leftChildIndex] &&
+            // bigger than right children
+            swapValueWithIndex(currentIndex, rightChildIndex);
+            moveDown(rightChildIndex);
         } else {
             return;
         }
@@ -115,11 +127,11 @@ public class BinaryHeap implements PriorityQueue {
     }
 
     private void initializeArray(int[] targetArray) {
-        Arrays.fill(targetArray, -1);
+        Arrays.fill(targetArray, DEFAULT_ARRAY_INIT_VALUE);
     }
 
     private boolean isEmptyOnIndex(int targetIndex) {
-        return -1 == this.getData()[targetIndex];
+        return DEFAULT_ARRAY_INIT_VALUE == this.getData()[targetIndex];
     }
 
     private int parentIndex(int childIndex) {
@@ -147,7 +159,7 @@ public class BinaryHeap implements PriorityQueue {
     }
 
     private boolean isEmpty() {
-        return -1 == this.getData()[1];
+        return DEFAULT_ARRAY_INIT_VALUE == this.getData()[1];
     }
 
     public int[] getData() {
