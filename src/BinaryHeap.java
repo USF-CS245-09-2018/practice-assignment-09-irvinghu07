@@ -17,7 +17,20 @@ public class BinaryHeap implements PriorityQueue {
     private int maxSize;
 
     public void printInternal() {
-        System.out.println(Arrays.toString(this.getData()));
+        System.out.println("length: " + this.getCurrentSize());
+        StringBuffer stringBuffer = new StringBuffer("[");
+        for (int i = 0; i < this.getData().length; i++) {
+            if (-1 != this.data[i]) {
+                if (i + 1 != this.getData().length) {
+                    stringBuffer.append(this.data[i] + ", ");
+                } else {
+                    stringBuffer.append(i);
+                }
+            }
+        }
+        stringBuffer.append("]");
+//        System.out.println(Arrays.toString(this.getData()));
+        System.out.println(stringBuffer.toString());
     }
 
     public BinaryHeap(int size) {
@@ -52,7 +65,7 @@ public class BinaryHeap implements PriorityQueue {
 
     @Override
     public Integer remove() {
-        if (isEmpty()){
+        if (isEmpty()) {
             throw new BinaryHeapIndexOutOfBoundException();
         }
         int lastElementIndex = this.getCurrentSize();
