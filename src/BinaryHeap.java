@@ -16,6 +16,10 @@ public class BinaryHeap implements PriorityQueue {
 
     private int maxSize;
 
+    public void printInternal() {
+        System.out.println(Arrays.toString(this.getData()));
+    }
+
     public BinaryHeap(int size) {
         this.data = new int[size];
         initializeArray(this.data);
@@ -48,14 +52,18 @@ public class BinaryHeap implements PriorityQueue {
 
     @Override
     public Integer remove() {
-        int lastElementIndex = this.getCurrentSize() - 1;
-        int currentIndex = 0;
-        if (0 != lastElementIndex) {
+        if (isEmpty()){
+            throw new BinaryHeapIndexOutOfBoundException();
+        }
+        int lastElementIndex = this.getCurrentSize();
+        int currentIndex = 1;
+        if (currentIndex != lastElementIndex) {
             swapValueWithIndex(currentIndex, lastElementIndex);
             moveDown(currentIndex);
         }
-        int returnVal = this.data[--this.currentSize];
+        int returnVal = this.data[this.currentSize];
         this.data[this.getCurrentSize()] = -1;
+        this.currentSize--;
         return returnVal;
     }
 
@@ -65,17 +73,17 @@ public class BinaryHeap implements PriorityQueue {
         if (leftChildIndex >= this.getCurrentSize() || rightChildIndex >= this.getCurrentSize()) {
             return;
         }
-        if (this.data[0] > this.data[leftChildIndex] && this.data[0] < this.data[rightChildIndex]) {
+        if (this.data[currentIndex] > this.data[leftChildIndex] && this.data[currentIndex] < this.data[rightChildIndex]) {
             // bigger than left children
             swapValueWithIndex(currentIndex, leftChildIndex);
             moveDown(leftChildIndex);
-        } else if (this.data[0] < this.data[leftChildIndex] && this.data[0] > this.data[rightChildIndex]) {
+        } else if (this.data[currentIndex] < this.data[leftChildIndex] && this.data[currentIndex] > this.data[rightChildIndex]) {
             // bigger than right children
             swapValueWithIndex(currentIndex, rightChildIndex);
             moveDown(rightChildIndex);
-        } else if (this.data[0] > this.data[leftChildIndex] && this.data[0] > this.data[rightChildIndex]) {
+        } else if (this.data[currentIndex] > this.data[leftChildIndex] && this.data[currentIndex] > this.data[rightChildIndex]) {
             // bigger than both of left and right children
-            int resultIndex = maxBetweenChildren(leftChildIndex, rightChildIndex);
+            int resultIndex = minBetweenChildren(leftChildIndex, rightChildIndex);
             swapValueWithIndex(currentIndex, resultIndex);
             moveDown(resultIndex);
         } else {
@@ -83,8 +91,8 @@ public class BinaryHeap implements PriorityQueue {
         }
     }
 
-    private int maxBetweenChildren(int leftChildIndex, int rightChildIndex) {
-        return this.data[leftChildIndex] > this.data[rightChildIndex] ? leftChildIndex : rightChildIndex;
+    private int minBetweenChildren(int leftChildIndex, int rightChildIndex) {
+        return this.data[leftChildIndex] < this.data[rightChildIndex] ? leftChildIndex : rightChildIndex;
     }
 
     private void swapValueWithIndex(int a, int b) {
@@ -106,11 +114,11 @@ public class BinaryHeap implements PriorityQueue {
     }
 
     private int leftChildIndex(int parentIndex) {
-        return 2 * parentIndex + 1;
+        return 2 * parentIndex;
     }
 
     private int rightChildIndex(int parentIndex) {
-        return 2 * parentIndex + 2;
+        return 2 * parentIndex + 1;
     }
 
     private void doubleArraySize() {
@@ -126,7 +134,7 @@ public class BinaryHeap implements PriorityQueue {
     }
 
     private boolean isEmpty() {
-        return -1 == this.getData()[0];
+        return -1 == this.getData()[1];
     }
 
     public int[] getData() {
